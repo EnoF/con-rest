@@ -1,0 +1,220 @@
+<!DOCTYPE html><html lang="en"><head><title>server/api</title></head><meta http-equiv="Content-Type" content="text/html; charset=utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0"><meta name="groc-relative-root" content="../"><meta name="groc-document-path" content="server/api"><meta name="groc-project-path" content="server/api.js"><link rel="stylesheet" type="text/css" media="all" href="../assets/style.css"><script type="text/javascript" src="../assets/behavior.js"></script><body><div id="meta"><div class="file-path">server/api.js</div></div><div id="document"><div class="segment"><div class="comments "><div class="wrapper"><p>con-rest
+Version: 0.0.1
+Author: Andy Tang
+Fork me on Github: https://github.com/EnoF/con-rest</p></div></div><div class="code"><div class="wrapper"><span class="p">(</span><span class="kd">function</span> <span class="nx">apiScope</span><span class="p">(</span><span class="nx">mongoose</span><span class="p">,</span> <span class="nx">queue</span><span class="p">,</span> <span class="nx">request</span><span class="p">,</span> <span class="nx">_</span><span class="p">,</span> <span class="nx">Execution</span><span class="p">,</span> <span class="nx">APICall</span><span class="p">,</span> <span class="nx">execution</span><span class="p">,</span> <span class="nx">config</span><span class="p">)</span> <span class="p">{</span>
+  <span class="s1">&#39;use strict&#39;</span><span class="p">;</span>
+
+  <span class="kd">var</span> <span class="nx">PAYLOAD</span> <span class="o">=</span> <span class="s1">&#39;payload&#39;</span><span class="p">;</span>
+  <span class="kd">var</span> <span class="nx">FORM_DATA</span> <span class="o">=</span> <span class="s1">&#39;formData&#39;</span><span class="p">;</span>
+
+  <span class="kd">var</span> <span class="nx">helper</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="s1">&#39;./serverHelper&#39;</span><span class="p">);</span></div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p>Receive all stored REST calls from the database.
+Response is "Status: 200 OK" and an array of JSON objects. Response example:</p></div></div></div><div class="segment"><div class="comments "><div class="wrapper"><pre><code>[{
+    "_id":"547874b2281a1fbc22e2284b",
+    "name":"sampleRestCall",
+    "url":"http://this.sample.call",
+    "method":"POST",
+    "type":"formData",
+    "data":"{\n\"sampleParam\":\"sampleValue\",\n\"testParam\":\"2\"\n}",
+    "headers":"{\n\"sampleAuthorization\":\"sampleValue\"\n}",
+    "__v":0
+}]
+</code></pre></div></div><div class="code"><div class="wrapper">  <span class="kd">function</span> <span class="nx">getAPICalls</span><span class="p">(</span><span class="nx">req</span><span class="p">,</span> <span class="nx">res</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">return</span> <span class="nx">helper</span><span class="p">.</span><span class="nx">getAll</span><span class="p">(</span><span class="nx">APICall</span><span class="p">,</span> <span class="nx">req</span><span class="p">,</span> <span class="nx">res</span><span class="p">);</span>
+  <span class="p">}</span></div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p>Receive specific REST call from the database by its ID
+Response is "Status: 200 OK" and a JSON object. Response example:</p></div></div></div><div class="segment"><div class="comments "><div class="wrapper"><pre><code>{
+    "_id":"547874b2281a1fbc22e2284b",
+    "name":"sampleRestCall",
+    "url":"http://this.sample.call",
+    "method":"POST",
+    "type":"formData",
+    "data":"{\n\"sampleParam\":\"sampleValue\",\n\"testParam\":\"2\"\n}",
+    "headers":"{\n\"sampleAuthorization\":\"sampleValue\"\n}",
+    "__v":0
+}
+</code></pre></div></div><div class="code"><div class="wrapper">  <span class="kd">function</span> <span class="nx">getAPICallById</span><span class="p">(</span><span class="nx">req</span><span class="p">,</span> <span class="nx">res</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">return</span> <span class="nx">helper</span><span class="p">.</span><span class="nx">getById</span><span class="p">(</span><span class="nx">APICall</span><span class="p">,</span> <span class="nx">req</span><span class="p">,</span> <span class="nx">res</span><span class="p">);</span>
+  <span class="p">}</span></div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p>Delete specific REST call from database by its ID
+Response is "Status: 200 OK" and "deleted" in body</p></div></div><div class="code"><div class="wrapper">  <span class="kd">function</span> <span class="nx">deleteAPICall</span><span class="p">(</span><span class="nx">req</span><span class="p">,</span> <span class="nx">res</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">return</span> <span class="nx">helper</span><span class="p">.</span><span class="nx">deleteById</span><span class="p">(</span><span class="nx">APICall</span><span class="p">,</span> <span class="nx">req</span><span class="p">,</span> <span class="nx">res</span><span class="p">);</span>
+  <span class="p">}</span></div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p>Receive all executions of a specific REST call by its ID
+Response is "Status: 200 OK" and an array of JSON objects. Sample response:</p></div></div></div><div class="segment"><div class="comments "><div class="wrapper"><pre><code>[{
+    "_id": "547d9969c48ab5b029856df6",
+    "workflow": null,
+    "apiCall": "547874b2281a1fbc22e2284b",
+    "statusCode":200,
+    "response": {
+        "sampleResponse": "sampleValue",
+        "sampleReference": "anotherValue"
+    },
+    "headers": {
+        "user-agent": "con-rest",
+        "sampleAuthorization": "sampleValue"
+    },
+    "executedAt": "2014-12-02T13:30:55.955Z",
+    "__v":0
+}]
+</code></pre></div></div><div class="code"><div class="wrapper">  <span class="kd">function</span> <span class="nx">getExecutionsByAPICallId</span><span class="p">(</span><span class="nx">req</span><span class="p">,</span> <span class="nx">res</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">return</span> <span class="nx">helper</span><span class="p">.</span><span class="nx">getById</span><span class="p">(</span><span class="nx">APICall</span><span class="p">,</span> <span class="nx">req</span><span class="p">,</span> <span class="nx">res</span><span class="p">);</span>
+  <span class="p">}</span></div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p>Add new REST call to the database and receive its ID
+Response is "Status: 200 OK" and an ID in the body. Request example:</p></div></div></div><div class="segment"><div class="comments "><div class="wrapper"><pre><code>{
+    "name": "newSampleRestCall",
+    "url": "http://new.sample.api/call",
+    "method": "POST",
+    "headers": {
+        "sampleAuthorization":"sampleValue" },
+    "type":"payload",
+    "data": {
+        "sampleParam":"sampleValue",
+        "testParam":2 }
+}
+</code></pre></div></div><div class="code"><div class="wrapper">  <span class="kd">function</span> <span class="nx">registerAPICall</span><span class="p">(</span><span class="nx">req</span><span class="p">,</span> <span class="nx">res</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">return</span> <span class="nx">helper</span><span class="p">.</span><span class="nx">createAndReturnId</span><span class="p">(</span><span class="nx">APICall</span><span class="p">,</span> <span class="nx">req</span><span class="p">,</span> <span class="nx">res</span><span class="p">);</span>
+  <span class="p">}</span>
+
+  <span class="kd">function</span> <span class="nx">saveAPICall</span><span class="p">(</span><span class="nx">req</span><span class="p">,</span> <span class="nx">res</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">return</span> <span class="nx">helper</span><span class="p">.</span><span class="nx">updateById</span><span class="p">(</span><span class="nx">APICall</span><span class="p">,</span> <span class="nx">req</span><span class="p">,</span> <span class="nx">res</span><span class="p">);</span>
+  <span class="p">}</span></div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p>Execute a REST call from the database using its ID
+Response is "Status: 200 OK" and a JSON body. Response Example:</p></div></div></div><div class="segment"><div class="comments "><div class="wrapper"><pre><code>{
+    "_id": "547d9969c48ab5b029856df6",
+    "statusCode": 200,
+    "apiCall": {
+        "_id":"547874b2281a1fbc22e2284b",
+        "name": "newSampleRestCall",
+        "url": "http://new.sample.api/call",
+        "method": "POST",
+        "headers": {
+            "sampleAuthorization":"sampleValue"
+        }
+        "type":"payload",
+        "data": {
+            "sampleParam":"sampleValue",
+            "testParam":2
+        }
+    },
+    "response": {
+        "sampleResponse": "sampleValue",
+        "sampleReference": "anotherValue"
+    },
+    "headers": {
+        "user-agent": "con-rest",
+        "sampleAuthorization": "sampleValue"
+    },
+    "type": "payload",
+    "data": {
+        "sampleParam":"sampleValue",
+        "testParam":2
+    }
+}
+</code></pre></div></div><div class="code"><div class="wrapper">  <span class="kd">function</span> <span class="nx">executeAPICallById</span><span class="p">(</span><span class="nx">req</span><span class="p">,</span> <span class="nx">res</span><span class="p">)</span> <span class="p">{</span>
+    <span class="kd">var</span> <span class="nx">id</span> <span class="o">=</span> <span class="nx">mongoose</span><span class="p">.</span><span class="nx">Types</span><span class="p">.</span><span class="nx">ObjectId</span><span class="p">(</span><span class="nx">req</span><span class="p">.</span><span class="nx">params</span><span class="p">.</span><span class="nx">id</span><span class="p">);</span>
+    <span class="k">return</span> <span class="nx">APICall</span><span class="p">.</span><span class="nx">findById</span><span class="p">(</span><span class="nx">id</span><span class="p">)</span>
+      <span class="p">.</span><span class="nx">exec</span><span class="p">()</span>
+      <span class="p">.</span><span class="nx">then</span><span class="p">(</span><span class="kd">function</span> <span class="nx">returnCall</span><span class="p">(</span><span class="nx">call</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">return</span> <span class="nx">executeAPICall</span><span class="p">(</span><span class="nx">call</span><span class="p">);</span>
+      <span class="p">})</span>
+      <span class="p">.</span><span class="nx">then</span><span class="p">(</span><span class="nx">saveExecution</span><span class="p">)</span>
+      <span class="p">.</span><span class="nx">then</span><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">data</span><span class="p">)</span> <span class="p">{</span>
+        <span class="nx">res</span><span class="p">.</span><span class="nx">send</span><span class="p">(</span><span class="nx">data</span><span class="p">);</span>
+        <span class="k">return</span> <span class="nx">data</span><span class="p">;</span>
+      <span class="p">},</span> <span class="kd">function</span> <span class="nx">error</span><span class="p">(</span><span class="nx">err</span><span class="p">)</span> <span class="p">{</span>
+        <span class="nx">res</span><span class="p">.</span><span class="nx">status</span><span class="p">(</span><span class="mi">500</span><span class="p">).</span><span class="nx">send</span><span class="p">(</span><span class="nx">err</span><span class="p">);</span>
+        <span class="k">throw</span> <span class="nx">err</span><span class="p">;</span>
+      <span class="p">});</span>
+  <span class="p">}</span></div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p>generates the <code>header</code> object to be sent with every request.
+it will add the user specified headers to the default headers</p></div></div><div class="code"><div class="wrapper">  <span class="kd">function</span> <span class="nx">getHeaders</span><span class="p">(</span><span class="nx">headers</span><span class="p">)</span> <span class="p">{</span>
+    <span class="kd">var</span> <span class="nx">defaultHeaders</span> <span class="o">=</span> <span class="p">{</span>
+      <span class="s1">&#39;user-agent&#39;</span><span class="o">:</span> <span class="s1">&#39;con-rest&#39;</span>
+    <span class="p">};</span>
+
+    <span class="k">if</span> <span class="p">(</span><span class="nx">headers</span><span class="p">)</span> <span class="p">{</span>
+      <span class="nx">defaultHeaders</span> <span class="o">=</span> <span class="nx">_</span><span class="p">.</span><span class="nx">extend</span><span class="p">(</span><span class="nx">defaultHeaders</span><span class="p">,</span> <span class="nx">headers</span><span class="p">);</span>
+    <span class="p">}</span>
+
+    <span class="k">return</span> <span class="nx">defaultHeaders</span><span class="p">;</span>
+  <span class="p">}</span></div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p>generates the complete <code>options</code> object for the request</p></div></div><div class="code"><div class="wrapper">  <span class="kd">function</span> <span class="nx">getOptions</span><span class="p">(</span><span class="nx">apiCall</span><span class="p">)</span> <span class="p">{</span>
+    <span class="kd">var</span> <span class="nx">headers</span> <span class="o">=</span> <span class="nx">getHeaders</span><span class="p">(</span><span class="nx">apiCall</span><span class="p">.</span><span class="nx">headers</span><span class="p">);</span>
+
+    <span class="kd">var</span> <span class="nx">options</span> <span class="o">=</span> <span class="p">{</span>
+      <span class="nx">method</span><span class="o">:</span> <span class="nx">apiCall</span><span class="p">.</span><span class="nx">method</span><span class="p">,</span>
+      <span class="nx">url</span><span class="o">:</span> <span class="nx">apiCall</span><span class="p">.</span><span class="nx">url</span><span class="p">,</span>
+      <span class="nx">headers</span><span class="o">:</span> <span class="nx">headers</span><span class="p">,</span>
+      <span class="nx">agentOptions</span><span class="o">:</span> <span class="p">{</span>
+        <span class="nx">ca</span><span class="o">:</span> <span class="nx">config</span><span class="p">.</span><span class="nx">getCertificates</span><span class="p">()</span>
+      <span class="p">}</span>
+    <span class="p">};</span>
+
+    <span class="kd">var</span> <span class="nx">type</span> <span class="o">=</span> <span class="nx">apiCall</span><span class="p">.</span><span class="nx">type</span> <span class="o">||</span> <span class="kc">null</span><span class="p">;</span>
+    <span class="kd">var</span> <span class="nx">data</span> <span class="o">=</span> <span class="nx">apiCall</span><span class="p">.</span><span class="nx">data</span> <span class="o">||</span> <span class="kc">null</span><span class="p">;</span></div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p>these two are for saving the execution to the database</p></div></div><div class="code"><div class="wrapper">    <span class="nx">options</span><span class="p">.</span><span class="nx">type</span> <span class="o">=</span> <span class="nx">type</span><span class="p">;</span>
+    <span class="nx">options</span><span class="p">.</span><span class="nx">data</span> <span class="o">=</span> <span class="nx">data</span><span class="p">;</span>
+
+    <span class="k">if</span> <span class="p">(</span><span class="nx">data</span> <span class="o">&amp;&amp;</span> <span class="nx">type</span> <span class="o">===</span> <span class="nx">PAYLOAD</span><span class="p">)</span> <span class="p">{</span></div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p><em>PAYLOAD</em> will go into the <code>body</code> of the request</p></div></div><div class="code"><div class="wrapper">      <span class="k">try</span> <span class="p">{</span></div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p>when we are handling <em>PAYLOAD</em> data then we will try to stringify the data
+e.g. converting the internal js object to an json string</p></div></div><div class="code"><div class="wrapper">        <span class="nx">options</span><span class="p">.</span><span class="nx">body</span> <span class="o">=</span> <span class="nx">JSON</span><span class="p">.</span><span class="nx">stringify</span><span class="p">(</span><span class="nx">data</span><span class="p">);</span>
+        <span class="nx">options</span><span class="p">.</span><span class="nx">json</span> <span class="o">=</span> <span class="kc">true</span><span class="p">;</span>
+      <span class="p">}</span> <span class="k">catch</span> <span class="p">(</span><span class="nx">e</span><span class="p">)</span> <span class="p">{</span></div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p>if the stringify fails we are just taking the string provided from mongo</p></div></div><div class="code"><div class="wrapper">        <span class="nx">options</span><span class="p">.</span><span class="nx">body</span> <span class="o">=</span> <span class="nx">data</span><span class="p">;</span>
+      <span class="p">}</span>
+    <span class="p">}</span> <span class="k">else</span> <span class="k">if</span> <span class="p">(</span><span class="nx">type</span> <span class="o">===</span> <span class="nx">FORM_DATA</span><span class="p">)</span> <span class="p">{</span></div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p><em>FORM_DATA</em> will go into the <code>formData</code> of the request</p></div></div><div class="code"><div class="wrapper">      <span class="nx">options</span><span class="p">.</span><span class="nx">formData</span> <span class="o">=</span> <span class="nx">data</span><span class="p">;</span>
+    <span class="p">}</span>
+
+    <span class="k">return</span> <span class="nx">options</span><span class="p">;</span>
+  <span class="p">}</span></div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p>Executes REST call from database</p></div></div><div class="code"><div class="wrapper">  <span class="kd">function</span> <span class="nx">executeAPICall</span><span class="p">(</span><span class="nx">apiCall</span><span class="p">)</span> <span class="p">{</span>
+    <span class="kd">var</span> <span class="nx">deferred</span> <span class="o">=</span> <span class="nx">queue</span><span class="p">.</span><span class="nx">defer</span><span class="p">();</span>
+    <span class="kd">var</span> <span class="nx">options</span> <span class="o">=</span> <span class="nx">getOptions</span><span class="p">(</span><span class="nx">apiCall</span><span class="p">);</span>
+    <span class="nx">request</span><span class="p">(</span><span class="nx">options</span><span class="p">,</span> <span class="kd">function</span><span class="p">(</span><span class="nx">err</span><span class="p">,</span> <span class="nx">response</span><span class="p">,</span> <span class="nx">body</span><span class="p">)</span> <span class="p">{</span>
+      <span class="k">if</span> <span class="p">(</span><span class="nx">err</span><span class="p">)</span> <span class="p">{</span>
+        <span class="nx">deferred</span><span class="p">.</span><span class="nx">reject</span><span class="p">(</span><span class="nx">err</span><span class="p">);</span>
+        <span class="k">return</span><span class="p">;</span>
+      <span class="p">}</span>
+
+      <span class="kd">var</span> <span class="nx">parsedBody</span> <span class="o">=</span> <span class="kc">null</span><span class="p">;</span>
+      <span class="k">try</span> <span class="p">{</span></div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p>if the response body is json we try to parse it an put the object into the db</p></div></div><div class="code"><div class="wrapper">        <span class="nx">parsedBody</span> <span class="o">=</span> <span class="nx">JSON</span><span class="p">.</span><span class="nx">parse</span><span class="p">(</span><span class="nx">body</span><span class="p">);</span>
+      <span class="p">}</span> <span class="k">catch</span> <span class="p">(</span><span class="nx">e</span><span class="p">)</span> <span class="p">{</span></div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p>otherwise a string of it will be saved</p></div></div><div class="code"><div class="wrapper">        <span class="nx">parsedBody</span> <span class="o">=</span> <span class="nx">body</span><span class="p">;</span>
+      <span class="p">}</span>
+
+      <span class="nx">deferred</span><span class="p">.</span><span class="nx">resolve</span><span class="p">({</span>
+        <span class="nx">statusCode</span><span class="o">:</span> <span class="nx">response</span><span class="p">.</span><span class="nx">statusCode</span><span class="p">,</span>
+        <span class="nx">apiCall</span><span class="o">:</span> <span class="nx">apiCall</span><span class="p">,</span>
+        <span class="nx">response</span><span class="o">:</span> <span class="nx">parsedBody</span><span class="p">,</span>
+        <span class="nx">headers</span><span class="o">:</span> <span class="nx">options</span><span class="p">.</span><span class="nx">headers</span><span class="p">,</span>
+        <span class="nx">type</span><span class="o">:</span> <span class="nx">options</span><span class="p">.</span><span class="nx">type</span><span class="p">,</span>
+        <span class="nx">data</span><span class="o">:</span> <span class="nx">options</span><span class="p">.</span><span class="nx">data</span>
+      <span class="p">});</span>
+    <span class="p">});</span>
+    <span class="k">return</span> <span class="nx">deferred</span><span class="p">.</span><span class="nx">promise</span><span class="p">;</span>
+  <span class="p">}</span></div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p>Saves result of REST call execution in database</p></div></div><div class="code"><div class="wrapper">  <span class="kd">function</span> <span class="nx">saveExecution</span><span class="p">(</span><span class="nx">result</span><span class="p">)</span> <span class="p">{</span></div></div></div><div class="segment"><div class="comments "><div class="wrapper"><p>this execution comes from direct execution of a request
+so workflow will be null</p></div></div><div class="code"><div class="wrapper">    <span class="k">return</span> <span class="nx">Execution</span><span class="p">.</span><span class="nx">create</span><span class="p">({</span>
+        <span class="nx">workflow</span><span class="o">:</span> <span class="kc">null</span><span class="p">,</span>
+        <span class="nx">apiCall</span><span class="o">:</span> <span class="nx">result</span><span class="p">.</span><span class="nx">apiCall</span><span class="p">,</span>
+        <span class="nx">statusCode</span><span class="o">:</span> <span class="nx">result</span><span class="p">.</span><span class="nx">statusCode</span><span class="p">,</span>
+        <span class="nx">response</span><span class="o">:</span> <span class="nx">result</span><span class="p">.</span><span class="nx">response</span><span class="p">,</span>
+        <span class="nx">headers</span><span class="o">:</span> <span class="nx">result</span><span class="p">.</span><span class="nx">headers</span><span class="p">,</span>
+        <span class="nx">type</span><span class="o">:</span> <span class="nx">result</span><span class="p">.</span><span class="nx">type</span><span class="p">,</span>
+        <span class="nx">data</span><span class="o">:</span> <span class="nx">result</span><span class="p">.</span><span class="nx">data</span><span class="p">,</span>
+        <span class="nx">executedAt</span><span class="o">:</span> <span class="k">new</span> <span class="nb">Date</span><span class="p">()</span>
+      <span class="p">})</span>
+      <span class="p">.</span><span class="nx">then</span><span class="p">(</span><span class="kd">function</span> <span class="nx">resolveWithResult</span><span class="p">(</span><span class="nx">data</span><span class="p">)</span> <span class="p">{</span>
+        <span class="kd">var</span> <span class="nx">returnData</span> <span class="o">=</span> <span class="nx">data</span><span class="p">.</span><span class="nx">toObject</span><span class="p">();</span>
+        <span class="nx">returnData</span><span class="p">.</span><span class="nx">apiCall</span> <span class="o">=</span> <span class="nx">result</span><span class="p">.</span><span class="nx">apiCall</span><span class="p">;</span>
+        <span class="k">return</span> <span class="nx">returnData</span><span class="p">;</span>
+      <span class="p">});</span>
+  <span class="p">}</span>
+
+  <span class="nx">module</span><span class="p">.</span><span class="nx">exports</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="nx">deleteAPICall</span><span class="o">:</span> <span class="nx">deleteAPICall</span><span class="p">,</span>
+    <span class="nx">saveAPICall</span><span class="o">:</span> <span class="nx">saveAPICall</span><span class="p">,</span>
+    <span class="nx">getAPICalls</span><span class="o">:</span> <span class="nx">getAPICalls</span><span class="p">,</span>
+    <span class="nx">getAPICallById</span><span class="o">:</span> <span class="nx">getAPICallById</span><span class="p">,</span>
+    <span class="nx">registerAPICall</span><span class="o">:</span> <span class="nx">registerAPICall</span><span class="p">,</span>
+    <span class="nx">executeAPICall</span><span class="o">:</span> <span class="nx">executeAPICall</span><span class="p">,</span>
+    <span class="nx">executeAPICallById</span><span class="o">:</span> <span class="nx">executeAPICallById</span><span class="p">,</span>
+    <span class="nx">getExecutionsByAPICallId</span><span class="o">:</span> <span class="nx">getExecutionsByAPICallId</span>
+  <span class="p">};</span>
+<span class="p">}(</span>
+  <span class="nx">require</span><span class="p">(</span><span class="s1">&#39;mongoose&#39;</span><span class="p">),</span>
+  <span class="nx">require</span><span class="p">(</span><span class="s1">&#39;q&#39;</span><span class="p">),</span>
+  <span class="nx">require</span><span class="p">(</span><span class="s1">&#39;request&#39;</span><span class="p">),</span>
+  <span class="nx">require</span><span class="p">(</span><span class="s1">&#39;underscore&#39;</span><span class="p">),</span>
+  <span class="nx">require</span><span class="p">(</span><span class="s1">&#39;./resources/Execution&#39;</span><span class="p">),</span>
+  <span class="nx">require</span><span class="p">(</span><span class="s1">&#39;./resources/APICall&#39;</span><span class="p">),</span>
+  <span class="nx">require</span><span class="p">(</span><span class="s1">&#39;./execution&#39;</span><span class="p">),</span>
+  <span class="nx">require</span><span class="p">(</span><span class="s1">&#39;./getConfig.js&#39;</span><span class="p">)</span>
+<span class="p">));</span></div></div></div></div></body></html>

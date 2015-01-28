@@ -1,0 +1,22 @@
+<!DOCTYPE html><html lang="en"><head><title>server/resources/APICall</title></head><meta http-equiv="Content-Type" content="text/html; charset=utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0"><meta name="groc-relative-root" content="../../"><meta name="groc-document-path" content="server/resources/APICall"><meta name="groc-project-path" content="server/resources/APICall.js"><link rel="stylesheet" type="text/css" media="all" href="../../assets/style.css"><script type="text/javascript" src="../../assets/behavior.js"></script><body><div id="meta"><div class="file-path">server/resources/APICall.js</div></div><div id="document"><div class="segment"><div class="comments "><div class="wrapper"><p>con-rest
+Version: 0.0.1
+Author: Dominik Kukacka
+Fork me on Github: https://github.com/EnoF/con-rest</p></div></div><div class="code"><div class="wrapper"><span class="p">(</span><span class="kd">function</span> <span class="nx">apiCallScope</span><span class="p">(</span><span class="nx">mongoose</span><span class="p">)</span> <span class="p">{</span>
+  <span class="s1">&#39;use strict&#39;</span><span class="p">;</span>
+
+  <span class="kd">var</span> <span class="nx">Schema</span> <span class="o">=</span> <span class="nx">mongoose</span><span class="p">.</span><span class="nx">Schema</span><span class="p">;</span>
+
+  <span class="kd">var</span> <span class="nx">apiCallSchema</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">Schema</span><span class="p">({</span>
+    <span class="nx">name</span><span class="o">:</span> <span class="nb">String</span><span class="p">,</span>
+    <span class="nx">url</span><span class="o">:</span> <span class="nb">String</span><span class="p">,</span>
+    <span class="nx">method</span><span class="o">:</span> <span class="nb">String</span><span class="p">,</span>
+    <span class="nx">type</span><span class="o">:</span> <span class="nb">String</span><span class="p">,</span>
+    <span class="nx">data</span><span class="o">:</span> <span class="nx">Schema</span><span class="p">.</span><span class="nx">Types</span><span class="p">.</span><span class="nx">Mixed</span><span class="p">,</span>
+    <span class="nx">headers</span><span class="o">:</span> <span class="nx">Schema</span><span class="p">.</span><span class="nx">Types</span><span class="p">.</span><span class="nx">Mixed</span>
+  <span class="p">});</span>
+
+  <span class="nx">module</span><span class="p">.</span><span class="nx">exports</span> <span class="o">=</span> <span class="nx">mongoose</span><span class="p">.</span><span class="nx">model</span><span class="p">(</span><span class="s1">&#39;APICall&#39;</span><span class="p">,</span> <span class="nx">apiCallSchema</span><span class="p">);</span>
+
+<span class="p">}(</span>
+  <span class="nx">require</span><span class="p">(</span><span class="s1">&#39;mongoose&#39;</span><span class="p">)</span>
+<span class="p">));</span></div></div></div></div></body></html>

@@ -1,0 +1,27 @@
+<!DOCTYPE html><html lang="en"><head><title>app/viewModels/connectorC</title></head><meta http-equiv="Content-Type" content="text/html; charset=utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0"><meta name="groc-relative-root" content="../../"><meta name="groc-document-path" content="app/viewModels/connectorC"><meta name="groc-project-path" content="app/viewModels/connectorC.js"><link rel="stylesheet" type="text/css" media="all" href="../../assets/style.css"><script type="text/javascript" src="../../assets/behavior.js"></script><body><div id="meta"><div class="file-path">app/viewModels/connectorC.js</div></div><div id="document"><div class="segment"><div class="code"><div class="wrapper"><span class="p">(</span><span class="kd">function</span> <span class="nx">connectorCScope</span><span class="p">(</span><span class="nx">angular</span><span class="p">)</span> <span class="p">{</span>
+  <span class="s1">&#39;use strict&#39;</span><span class="p">;</span>
+
+  <span class="kd">var</span> <span class="nx">app</span> <span class="o">=</span> <span class="nx">angular</span><span class="p">.</span><span class="nx">module</span><span class="p">(</span><span class="s1">&#39;con-rest&#39;</span><span class="p">);</span>
+
+  <span class="nx">app</span><span class="p">.</span><span class="nx">controller</span><span class="p">(</span><span class="s1">&#39;connectorC&#39;</span><span class="p">,</span> <span class="kd">function</span> <span class="nx">connectorC</span><span class="p">(</span><span class="nx">$scope</span><span class="p">,</span> <span class="nx">mapperDAO</span><span class="p">,</span> <span class="nx">connectorDAO</span><span class="p">,</span> <span class="nx">events</span><span class="p">)</span> <span class="p">{</span>
+    <span class="nx">$scope</span><span class="p">.</span><span class="nx">connector</span> <span class="o">=</span> <span class="nx">$scope</span><span class="p">.</span><span class="nx">connector</span> <span class="o">||</span> <span class="kc">null</span><span class="p">;</span>
+    <span class="nx">$scope</span><span class="p">.</span><span class="nx">availableMappers</span> <span class="o">=</span> <span class="kc">null</span><span class="p">;</span>
+    <span class="nx">$scope</span><span class="p">.</span><span class="nx">source</span> <span class="o">=</span> <span class="p">{};</span>
+    <span class="nx">$scope</span><span class="p">.</span><span class="nx">destination</span> <span class="o">=</span> <span class="p">{};</span>
+    <span class="nx">$scope</span><span class="p">.</span><span class="nx">mapper</span> <span class="o">=</span> <span class="p">{};</span>
+
+    <span class="nx">$scope</span><span class="p">.</span><span class="nx">getMappers</span> <span class="o">=</span> <span class="kd">function</span> <span class="nx">getMappers</span><span class="p">()</span> <span class="p">{</span>
+      <span class="nx">mapperDAO</span><span class="p">.</span><span class="nx">getAll</span><span class="p">()</span>
+        <span class="p">.</span><span class="nx">then</span><span class="p">(</span><span class="kd">function</span> <span class="nx">setMappers</span><span class="p">(</span><span class="nx">maps</span><span class="p">)</span> <span class="p">{</span>
+          <span class="nx">$scope</span><span class="p">.</span><span class="nx">availableMappers</span> <span class="o">=</span> <span class="nx">maps</span><span class="p">;</span>
+        <span class="p">});</span>
+    <span class="p">};</span>
+
+    <span class="nx">$scope</span><span class="p">.</span><span class="nx">save</span> <span class="o">=</span> <span class="kd">function</span> <span class="nx">save</span><span class="p">()</span> <span class="p">{</span>
+      <span class="nx">connectorDAO</span><span class="p">.</span><span class="nx">create</span><span class="p">(</span><span class="nx">$scope</span><span class="p">.</span><span class="nx">connector</span><span class="p">)</span>
+        <span class="p">.</span><span class="nx">then</span><span class="p">(</span><span class="kd">function</span> <span class="nx">publishCreated</span><span class="p">(</span><span class="nx">id</span><span class="p">)</span> <span class="p">{</span>
+          <span class="nx">$scope</span><span class="p">.</span><span class="nx">$emit</span><span class="p">(</span><span class="nx">events</span><span class="p">.</span><span class="nx">CONNECTOR_CREATED</span><span class="p">,</span> <span class="nx">id</span><span class="p">);</span>
+        <span class="p">});</span>
+    <span class="p">};</span>
+  <span class="p">});</span>
+<span class="p">}(</span><span class="nb">window</span><span class="p">.</span><span class="nx">angular</span><span class="p">));</span></div></div></div></div></body></html>

@@ -1,0 +1,41 @@
+<!DOCTYPE html><html lang="en"><head><title>server/getConfig</title></head><meta http-equiv="Content-Type" content="text/html; charset=utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0"><meta name="groc-relative-root" content="../"><meta name="groc-document-path" content="server/getConfig"><meta name="groc-project-path" content="server/getConfig.js"><link rel="stylesheet" type="text/css" media="all" href="../assets/style.css"><script type="text/javascript" src="../assets/behavior.js"></script><body><div id="meta"><div class="file-path">server/getConfig.js</div></div><div id="document"><div class="segment"><div class="comments "><div class="wrapper"><p>Created by Stefan Schacherl on 12.01.2015.</p></div></div><div class="code"><div class="wrapper"><span class="p">(</span><span class="kd">function</span> <span class="nx">getConfigScope</span><span class="p">(</span><span class="nx">fs</span><span class="p">)</span> <span class="p">{</span>
+  <span class="s1">&#39;use strict&#39;</span><span class="p">;</span>
+
+  <span class="kd">var</span> <span class="nx">config</span> <span class="o">=</span> <span class="nx">JSON</span><span class="p">.</span><span class="nx">parse</span><span class="p">(</span><span class="nx">fs</span><span class="p">.</span><span class="nx">readFileSync</span><span class="p">(</span><span class="s1">&#39;./config.json&#39;</span><span class="p">));</span>
+  <span class="kd">var</span> <span class="nx">certificates</span> <span class="o">=</span> <span class="nx">config</span><span class="p">.</span><span class="nx">certificates</span><span class="p">.</span><span class="nx">map</span><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">item</span><span class="p">)</span> <span class="p">{</span>
+    <span class="kd">var</span> <span class="nx">ca</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span><span class="p">;</span>
+    <span class="k">try</span> <span class="p">{</span>
+      <span class="nx">ca</span> <span class="o">=</span> <span class="nx">fs</span><span class="p">.</span><span class="nx">readFileSync</span><span class="p">(</span><span class="nx">item</span><span class="p">);</span>
+    <span class="p">}</span> <span class="k">catch</span><span class="p">(</span><span class="nx">e</span><span class="p">)</span> <span class="p">{</span>
+
+    <span class="p">}</span>
+    <span class="k">return</span> <span class="nx">ca</span><span class="p">;</span>
+  <span class="p">});</span>
+
+  <span class="kd">function</span> <span class="nx">getMongoConfig</span><span class="p">()</span> <span class="p">{</span>
+    <span class="kd">var</span> <span class="nx">connection</span> <span class="o">=</span> <span class="p">{};</span>
+    <span class="k">if</span> <span class="p">(</span><span class="nx">process</span><span class="p">.</span><span class="nx">env</span><span class="p">.</span><span class="nx">MONGO_CONNECTION</span><span class="p">)</span> <span class="p">{</span>
+      <span class="nx">connection</span><span class="p">.</span><span class="nx">uri</span> <span class="o">=</span> <span class="nx">process</span><span class="p">.</span><span class="nx">env</span><span class="p">.</span><span class="nx">MONGO_CONNECTION</span><span class="p">;</span>
+    <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+      <span class="nx">connection</span> <span class="o">=</span> <span class="nx">config</span><span class="p">.</span><span class="nx">mongoDb</span><span class="p">;</span>
+    <span class="p">}</span>
+    <span class="k">return</span> <span class="nx">connection</span><span class="p">;</span>
+  <span class="p">}</span>
+
+  <span class="kd">function</span> <span class="nx">getServerConfig</span><span class="p">()</span> <span class="p">{</span>
+    <span class="k">if</span> <span class="p">(</span><span class="nx">process</span><span class="p">.</span><span class="nx">env</span><span class="p">.</span><span class="nx">CON_REST_PORT</span><span class="p">)</span> <span class="p">{</span>
+      <span class="nx">config</span><span class="p">.</span><span class="nx">server</span><span class="p">.</span><span class="nx">port</span> <span class="o">=</span> <span class="nx">process</span><span class="p">.</span><span class="nx">env</span><span class="p">.</span><span class="nx">CON_REST_PORT</span><span class="p">;</span>
+    <span class="p">}</span>
+    <span class="k">return</span> <span class="nx">config</span><span class="p">.</span><span class="nx">server</span><span class="p">;</span>
+  <span class="p">}</span>
+
+  <span class="kd">function</span> <span class="nx">getCertificates</span><span class="p">()</span> <span class="p">{</span>
+    <span class="k">return</span> <span class="nx">certificates</span><span class="p">;</span>
+  <span class="p">}</span>
+
+  <span class="nx">module</span><span class="p">.</span><span class="nx">exports</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="nx">getMongoConfig</span><span class="o">:</span> <span class="nx">getMongoConfig</span><span class="p">,</span>
+    <span class="nx">getServerConfig</span><span class="o">:</span> <span class="nx">getServerConfig</span><span class="p">,</span>
+    <span class="nx">getCertificates</span><span class="o">:</span> <span class="nx">getCertificates</span>
+  <span class="p">};</span>
+<span class="p">}(</span><span class="nx">require</span><span class="p">(</span><span class="s1">&#39;fs&#39;</span><span class="p">)));</span></div></div></div></div></body></html>

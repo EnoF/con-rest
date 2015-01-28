@@ -1,0 +1,87 @@
+<!DOCTYPE html><html lang="en"><head><title>index</title></head><meta http-equiv="Content-Type" content="text/html; charset=utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0"><meta name="groc-relative-root" content=""><meta name="groc-document-path" content="index"><meta name="groc-project-path" content="README.md"><link rel="stylesheet" type="text/css" media="all" href="assets/style.css"><script type="text/javascript" src="assets/behavior.js"></script><body><div id="meta"><div class="file-path">README.md</div></div><div id="document"><div class="segment"><div class="comments "><div class="wrapper"><h1 id="conrest">conREST</h1>
+
+<p>conREST is an application to configure and chain multiple REST calls.</p>
+
+<p><a href="https://travis-ci.org/EnoF/con-rest"><img src="https://travis-ci.org/Jumio/con-rest.svg?branch=travis" alt="Build Status" title="" /></a></p>
+
+<h2 id="introduction">Introduction</h2>
+
+<p>While testing our <code>REST services</code> we noticed that our <code>REST services test tool</code> are focusing on single calls.
+This resulted in manual actions in order to reuse the result retrieved from the previous requests to perform a test
+for an <code>workflow</code>.</p>
+
+<p>This also implied that the knowledge of the <code>workflow</code> has to be stored outside of the test tool. We want to have all
+information grouped together, easy accessable and sharable.</p>
+
+<h2 id="features">Features</h2>
+
+<h3 id="implemented">Implemented</h3>
+
+<ul>
+<li>REST call deletion</li>
+<li>REST call editing</li>
+<li>REST call execution</li>
+<li>REST call registration</li>
+<li>Workflow deletion</li>
+<li>Workflow editing</li>
+<li>Workflow execution</li>
+<li>Workflow registration</li>
+</ul>
+
+<h3 id="roadmap">Roadmap</h3>
+
+<ul>
+<li>Connectors (INPROGRESS)</li>
+<li>Mappers (INPROGRESS)</li>
+<li>Transformers</li>
+<li>User authentication</li>
+<li>User roles/rights</li>
+</ul>
+
+<h2 id="setup">Setup</h2>
+
+<p>The setup requires:
+* MongoDB
+* nodejs
+* conREST artifact (INPROGRESS)</p>
+
+<h3 id="mongodb">MongoDB</h3>
+
+<p>Setting up your MongoDB by downloading and installing it from: http://www.mongodb.org/</p>
+
+<p>Configure <code>conREST</code> to point to your db location, with either <code>ENVIRONMENT VARIABLES</code> or with the <code>config file</code>.</p>
+
+<h4 id="environment-variables">ENVIRONMENT VARIABLES</h4>
+
+<p>Set the <code>MONGO_CONNECTION</code> variable like:</p>
+
+<pre><code>MONGO_CONNECTION=mongodb://&lt;username&gt;:&lt;password&gt;@&lt;url&gt;:&lt;port&gt;/&lt;dbname&gt;
+</code></pre>
+
+<h4 id="config-file">config file</h4>
+
+<p>If you rather have the settings stored in a file, you can edit the <code>config.js</code> at the root of the artifact folder.</p>
+
+<h3 id="nodejs">node.js</h3>
+
+<p><code>conREST</code> is tested against node.js version is 0.10.x.</p>
+
+<h3 id="artifactsinprogress">Artifacts(INPROGRESS)</h3>
+
+<p>The artifacts will be available on github. Head over to the Releases and download the release.</p>
+
+<h3 id="e2e-tests">E2E tests</h3>
+
+<p>E2E tests are performed with <code>protractor</code> with <code>mocha</code> and <code>yadda</code>. To run the E2E tests along with the other tests:</p>
+
+<pre><code>grunt package
+</code></pre>
+
+<p>To kick off the tests on a running server:</p>
+
+<pre><code># this will start the server with the db pointed to the test db
+grunt server:e2e
+
+# in a second terminal
+grunt e2e
+</code></pre></div></div></div></div></body></html>

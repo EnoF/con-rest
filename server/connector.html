@@ -1,0 +1,120 @@
+<!DOCTYPE html><html lang="en"><head><title>server/connector</title></head><meta http-equiv="Content-Type" content="text/html; charset=utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0"><meta name="groc-relative-root" content="../"><meta name="groc-document-path" content="server/connector"><meta name="groc-project-path" content="server/connector.js"><link rel="stylesheet" type="text/css" media="all" href="../assets/style.css"><script type="text/javascript" src="../assets/behavior.js"></script><body><div id="meta"><div class="file-path">server/connector.js</div></div><div id="document"><div class="segment"><div class="comments "><div class="wrapper"><p>con-rest
+Version: 0.0.1
+Author: Dominik Kukacka
+Fork me on Github: https://github.com/EnoF/con-rest</p></div></div><div class="code"><div class="wrapper"><span class="p">(</span><span class="kd">function</span> <span class="nx">connectorScope</span><span class="p">(</span><span class="nx">mongoose</span><span class="p">,</span> <span class="nx">queue</span><span class="p">,</span> <span class="nx">Workflow</span><span class="p">,</span> <span class="nx">Connector</span><span class="p">)</span> <span class="p">{</span>
+  <span class="s1">&#39;use strict&#39;</span><span class="p">;</span>
+
+  <span class="kd">function</span> <span class="nx">addConnectorToWorkflow</span><span class="p">(</span><span class="nx">req</span><span class="p">,</span> <span class="nx">res</span><span class="p">)</span> <span class="p">{</span>
+    <span class="kd">var</span> <span class="nx">workflowId</span> <span class="o">=</span> <span class="nx">mongoose</span><span class="p">.</span><span class="nx">Types</span><span class="p">.</span><span class="nx">ObjectId</span><span class="p">(</span><span class="nx">req</span><span class="p">.</span><span class="nx">params</span><span class="p">.</span><span class="nx">workflowId</span><span class="p">);</span>
+    <span class="kd">var</span> <span class="nx">connector</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">Connector</span><span class="p">(</span><span class="nx">req</span><span class="p">.</span><span class="nx">body</span><span class="p">);</span>
+    <span class="k">return</span> <span class="nx">Workflow</span><span class="p">.</span><span class="nx">findOneAndUpdate</span><span class="p">({</span>
+        <span class="nx">_id</span><span class="o">:</span> <span class="nx">workflowId</span>
+      <span class="p">},</span> <span class="p">{</span>
+        <span class="nx">$push</span><span class="o">:</span> <span class="p">{</span>
+          <span class="nx">connectors</span><span class="o">:</span> <span class="nx">connector</span>
+        <span class="p">}</span>
+      <span class="p">})</span>
+      <span class="p">.</span><span class="nx">exec</span><span class="p">()</span>
+      <span class="p">.</span><span class="nx">then</span><span class="p">(</span><span class="kd">function</span> <span class="nx">returnWorkflow</span><span class="p">(</span><span class="nx">workflow</span><span class="p">)</span> <span class="p">{</span>
+        <span class="nx">res</span><span class="p">.</span><span class="nx">send</span><span class="p">(</span><span class="nx">workflow</span><span class="p">);</span>
+        <span class="k">return</span> <span class="nx">workflow</span><span class="p">;</span>
+      <span class="p">},</span> <span class="kd">function</span> <span class="nx">error</span><span class="p">(</span><span class="nx">err</span><span class="p">)</span> <span class="p">{</span>
+        <span class="nx">res</span><span class="p">.</span><span class="nx">status</span><span class="p">(</span><span class="mi">500</span><span class="p">).</span><span class="nx">send</span><span class="p">(</span><span class="nx">err</span><span class="p">.</span><span class="nx">toString</span><span class="p">());</span>
+      <span class="p">});</span>
+  <span class="p">}</span>
+
+  <span class="kd">function</span> <span class="nx">saveConnector</span><span class="p">(</span><span class="nx">req</span><span class="p">,</span> <span class="nx">res</span><span class="p">)</span> <span class="p">{</span>
+    <span class="kd">var</span> <span class="nx">workflowId</span> <span class="o">=</span> <span class="nx">mongoose</span><span class="p">.</span><span class="nx">Types</span><span class="p">.</span><span class="nx">ObjectId</span><span class="p">(</span><span class="nx">req</span><span class="p">.</span><span class="nx">params</span><span class="p">.</span><span class="nx">workflowId</span><span class="p">);</span>
+    <span class="kd">var</span> <span class="nx">connectorId</span> <span class="o">=</span> <span class="nx">mongoose</span><span class="p">.</span><span class="nx">Types</span><span class="p">.</span><span class="nx">ObjectId</span><span class="p">(</span><span class="nx">req</span><span class="p">.</span><span class="nx">params</span><span class="p">.</span><span class="nx">connectorId</span><span class="p">);</span>
+    <span class="kd">var</span> <span class="nx">details</span> <span class="o">=</span> <span class="nx">req</span><span class="p">.</span><span class="nx">body</span><span class="p">;</span>
+    <span class="k">return</span> <span class="nx">Workflow</span><span class="p">.</span><span class="nx">findOneAndUpdate</span><span class="p">({</span>
+        <span class="nx">_id</span><span class="o">:</span> <span class="nx">workflowId</span><span class="p">,</span>
+        <span class="s1">&#39;connectors._id&#39;</span><span class="o">:</span> <span class="nx">connectorId</span>
+      <span class="p">},</span> <span class="p">{</span>
+        <span class="s1">&#39;$set&#39;</span><span class="o">:</span> <span class="p">{</span>
+          <span class="s1">&#39;connectors.$.source&#39;</span><span class="o">:</span> <span class="nx">details</span><span class="p">.</span><span class="nx">source</span><span class="p">,</span>
+          <span class="s1">&#39;connectors.$.destination&#39;</span><span class="o">:</span> <span class="nx">details</span><span class="p">.</span><span class="nx">destination</span><span class="p">,</span>
+          <span class="s1">&#39;connectors.$.mapper&#39;</span><span class="o">:</span> <span class="nx">details</span><span class="p">.</span><span class="nx">mapper</span>
+        <span class="p">}</span>
+      <span class="p">}).</span><span class="nx">exec</span><span class="p">()</span>
+      <span class="p">.</span><span class="nx">then</span><span class="p">(</span><span class="kd">function</span> <span class="nx">resolveWithWorkflow</span><span class="p">(</span><span class="nx">workflow</span><span class="p">)</span> <span class="p">{</span>
+        <span class="nx">res</span><span class="p">.</span><span class="nx">send</span><span class="p">(</span><span class="nx">workflow</span><span class="p">);</span>
+        <span class="k">return</span> <span class="nx">workflow</span><span class="p">;</span>
+      <span class="p">},</span> <span class="kd">function</span><span class="p">(</span><span class="nx">error</span><span class="p">)</span> <span class="p">{</span>
+        <span class="nx">res</span><span class="p">.</span><span class="nx">status</span><span class="p">(</span><span class="mi">500</span><span class="p">).</span><span class="nx">send</span><span class="p">(</span><span class="nx">error</span><span class="p">.</span><span class="nx">toString</span><span class="p">());</span>
+        <span class="k">throw</span> <span class="nx">error</span><span class="p">;</span>
+      <span class="p">});</span>
+  <span class="p">}</span>
+
+  <span class="kd">function</span> <span class="nx">getConnectorById</span><span class="p">(</span><span class="nx">req</span><span class="p">,</span> <span class="nx">res</span><span class="p">)</span> <span class="p">{</span>
+    <span class="kd">var</span> <span class="nx">workflowId</span> <span class="o">=</span> <span class="nx">mongoose</span><span class="p">.</span><span class="nx">Types</span><span class="p">.</span><span class="nx">ObjectId</span><span class="p">(</span><span class="nx">req</span><span class="p">.</span><span class="nx">params</span><span class="p">.</span><span class="nx">workflowId</span><span class="p">);</span>
+    <span class="kd">var</span> <span class="nx">connectorId</span> <span class="o">=</span> <span class="nx">mongoose</span><span class="p">.</span><span class="nx">Types</span><span class="p">.</span><span class="nx">ObjectId</span><span class="p">(</span><span class="nx">req</span><span class="p">.</span><span class="nx">params</span><span class="p">.</span><span class="nx">connectorId</span><span class="p">);</span>
+    <span class="k">return</span> <span class="nx">Workflow</span><span class="p">.</span><span class="nx">findOne</span><span class="p">({</span>
+        <span class="nx">_id</span><span class="o">:</span> <span class="nx">workflowId</span>
+      <span class="p">},</span> <span class="p">{</span>
+        <span class="nx">connectors</span><span class="o">:</span> <span class="p">{</span>
+          <span class="nx">$elemMatch</span><span class="o">:</span> <span class="p">{</span>
+            <span class="nx">_id</span><span class="o">:</span> <span class="nx">connectorId</span>
+          <span class="p">}</span>
+        <span class="p">}</span>
+      <span class="p">})</span>
+      <span class="p">.</span><span class="nx">populate</span><span class="p">(</span><span class="s1">&#39;connectors.source&#39;</span><span class="p">)</span>
+      <span class="p">.</span><span class="nx">populate</span><span class="p">(</span><span class="s1">&#39;connectors.destination&#39;</span><span class="p">)</span>
+      <span class="p">.</span><span class="nx">populate</span><span class="p">(</span><span class="s1">&#39;connectors.mapper&#39;</span><span class="p">)</span>
+      <span class="p">.</span><span class="nx">exec</span><span class="p">()</span>
+      <span class="p">.</span><span class="nx">then</span><span class="p">(</span><span class="kd">function</span> <span class="nx">extractConnector</span><span class="p">(</span><span class="nx">workflow</span><span class="p">)</span> <span class="p">{</span>
+        <span class="kd">var</span> <span class="nx">connector</span> <span class="o">=</span> <span class="nx">workflow</span><span class="p">.</span><span class="nx">connectors</span><span class="p">[</span><span class="mi">0</span><span class="p">];</span>
+        <span class="nx">res</span><span class="p">.</span><span class="nx">send</span><span class="p">(</span><span class="nx">connector</span><span class="p">);</span>
+        <span class="k">return</span> <span class="nx">connector</span><span class="p">;</span>
+      <span class="p">},</span> <span class="kd">function</span> <span class="nx">error</span><span class="p">(</span><span class="nx">err</span><span class="p">)</span> <span class="p">{</span>
+        <span class="nx">res</span><span class="p">.</span><span class="nx">status</span><span class="p">(</span><span class="mi">500</span><span class="p">).</span><span class="nx">send</span><span class="p">(</span><span class="nx">err</span><span class="p">.</span><span class="nx">toString</span><span class="p">());</span>
+      <span class="p">});</span>
+  <span class="p">}</span>
+
+  <span class="kd">function</span> <span class="nx">getConnectorsByWorkflowId</span><span class="p">(</span><span class="nx">req</span><span class="p">,</span> <span class="nx">res</span><span class="p">)</span> <span class="p">{</span>
+    <span class="kd">var</span> <span class="nx">workflowId</span> <span class="o">=</span> <span class="nx">mongoose</span><span class="p">.</span><span class="nx">Types</span><span class="p">.</span><span class="nx">ObjectId</span><span class="p">(</span><span class="nx">req</span><span class="p">.</span><span class="nx">params</span><span class="p">.</span><span class="nx">workflowId</span><span class="p">);</span>
+    <span class="k">return</span> <span class="nx">Workflow</span><span class="p">.</span><span class="nx">findById</span><span class="p">(</span><span class="nx">workflowId</span><span class="p">)</span>
+      <span class="p">.</span><span class="nx">exec</span><span class="p">()</span>
+      <span class="p">.</span><span class="nx">then</span><span class="p">(</span><span class="kd">function</span> <span class="nx">extractConnectors</span><span class="p">(</span><span class="nx">workflow</span><span class="p">)</span> <span class="p">{</span>
+        <span class="kd">var</span> <span class="nx">connectors</span> <span class="o">=</span> <span class="nx">workflow</span><span class="p">.</span><span class="nx">connectors</span><span class="p">;</span>
+        <span class="nx">res</span><span class="p">.</span><span class="nx">send</span><span class="p">(</span><span class="nx">connectors</span><span class="p">);</span>
+        <span class="k">return</span> <span class="nx">connectors</span><span class="p">;</span>
+      <span class="p">},</span> <span class="kd">function</span> <span class="nx">error</span><span class="p">(</span><span class="nx">err</span><span class="p">)</span> <span class="p">{</span>
+        <span class="nx">res</span><span class="p">.</span><span class="nx">status</span><span class="p">(</span><span class="mi">500</span><span class="p">).</span><span class="nx">send</span><span class="p">(</span><span class="nx">err</span><span class="p">.</span><span class="nx">toString</span><span class="p">());</span>
+      <span class="p">});</span>
+  <span class="p">}</span>
+
+
+  <span class="kd">function</span> <span class="nx">deleteConnector</span><span class="p">(</span><span class="nx">req</span><span class="p">,</span> <span class="nx">res</span><span class="p">)</span> <span class="p">{</span>
+    <span class="kd">var</span> <span class="nx">workflowId</span> <span class="o">=</span> <span class="nx">mongoose</span><span class="p">.</span><span class="nx">Types</span><span class="p">.</span><span class="nx">ObjectId</span><span class="p">(</span><span class="nx">req</span><span class="p">.</span><span class="nx">params</span><span class="p">.</span><span class="nx">workflowId</span><span class="p">);</span>
+    <span class="kd">var</span> <span class="nx">connectorId</span> <span class="o">=</span> <span class="nx">mongoose</span><span class="p">.</span><span class="nx">Types</span><span class="p">.</span><span class="nx">ObjectId</span><span class="p">(</span><span class="nx">req</span><span class="p">.</span><span class="nx">params</span><span class="p">.</span><span class="nx">connectorId</span><span class="p">);</span>
+    <span class="k">return</span> <span class="nx">Workflow</span><span class="p">.</span><span class="nx">findOneAndUpdate</span><span class="p">({</span>
+        <span class="nx">_id</span><span class="o">:</span> <span class="nx">workflowId</span>
+      <span class="p">},</span> <span class="p">{</span>
+        <span class="nx">$pull</span><span class="o">:</span> <span class="p">{</span>
+          <span class="nx">connectors</span><span class="o">:</span> <span class="p">{</span>
+            <span class="nx">_id</span><span class="o">:</span> <span class="nx">connectorId</span>
+          <span class="p">}</span>
+        <span class="p">}</span>
+      <span class="p">})</span>
+      <span class="p">.</span><span class="nx">exec</span><span class="p">()</span>
+      <span class="p">.</span><span class="nx">then</span><span class="p">(</span><span class="kd">function</span> <span class="nx">deletedSuccessful</span><span class="p">()</span> <span class="p">{</span>
+        <span class="nx">res</span><span class="p">.</span><span class="nx">send</span><span class="p">(</span><span class="s1">&#39;deleted&#39;</span><span class="p">);</span>
+      <span class="p">},</span> <span class="kd">function</span> <span class="nx">error</span><span class="p">(</span><span class="nx">err</span><span class="p">)</span> <span class="p">{</span>
+        <span class="nx">res</span><span class="p">.</span><span class="nx">status</span><span class="p">(</span><span class="mi">500</span><span class="p">).</span><span class="nx">send</span><span class="p">(</span><span class="nx">err</span><span class="p">.</span><span class="nx">toString</span><span class="p">());</span>
+      <span class="p">});</span>
+  <span class="p">}</span>
+
+  <span class="nx">module</span><span class="p">.</span><span class="nx">exports</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="nx">getConnectorById</span><span class="o">:</span> <span class="nx">getConnectorById</span><span class="p">,</span>
+    <span class="nx">getConnectorsByWorkflowId</span><span class="o">:</span> <span class="nx">getConnectorsByWorkflowId</span><span class="p">,</span>
+    <span class="nx">addConnectorToWorkflow</span><span class="o">:</span> <span class="nx">addConnectorToWorkflow</span><span class="p">,</span>
+    <span class="nx">saveConnector</span><span class="o">:</span> <span class="nx">saveConnector</span><span class="p">,</span>
+    <span class="nx">deleteConnector</span><span class="o">:</span> <span class="nx">deleteConnector</span>
+  <span class="p">};</span>
+<span class="p">}(</span>
+  <span class="nx">require</span><span class="p">(</span><span class="s1">&#39;mongoose&#39;</span><span class="p">),</span>
+  <span class="nx">require</span><span class="p">(</span><span class="s1">&#39;q&#39;</span><span class="p">),</span>
+  <span class="nx">require</span><span class="p">(</span><span class="s1">&#39;./resources/Workflow&#39;</span><span class="p">),</span>
+  <span class="nx">require</span><span class="p">(</span><span class="s1">&#39;./resources/Connector&#39;</span><span class="p">)</span>
+<span class="p">));</span></div></div></div></div></body></html>
