@@ -398,7 +398,9 @@ module.exports = function(grunt) {
       ts: {
         files: [
           'app/core/**/*.ts',
-          'app/widgets/**/*.ts'
+          'app/widgets/**/*.ts',
+          'test/**/*.ts',
+          'app/app.ts'
         ],
         tasks: ['ts', 'karma:unitAuto:run']
       },
