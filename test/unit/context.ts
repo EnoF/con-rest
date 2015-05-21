@@ -1,5 +1,6 @@
 module StepLibrary {
   import IWorkflow = Models.IWorkflow;
+  import ICall = Models.ICall;
 
   class Context {
     $parent: any;
@@ -9,6 +10,7 @@ module StepLibrary {
     directive: string;
     attributes: Object = {};
     workflows: Array<IWorkflow> = [];
+    calls: Array<ICall> = [];
 
     constructor() {
       this.renew();
@@ -19,6 +21,7 @@ module StepLibrary {
         this.$parent = $rootScope.$new();
         this.$httpBackend = $httpBackend;
         this.workflows = [];
+        this.calls = [];
       });
     }
 
