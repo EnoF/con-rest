@@ -11,7 +11,11 @@ module DAO {
       var deferred = this.$q.defer();
       this.get('/api/workflows/', null)
         .then((response: any) => {
-          deferred.resolve(new Workflow(response.data));
+          var workflows = [];
+          for(var i = 0; i < response.data.length; i++ ) {
+            workflows.push(new Workflow(response.data[i]));
+          }
+          deferred.resolve(workflows);
         }, deferred.reject);
       return deferred.promise;
     }
