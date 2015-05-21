@@ -8,7 +8,8 @@
 <md-content>
   <md-list>
     <md-list-item class="md-2-line"
-      ng-repeat="workflow in vm.workflows">
+      ng-repeat="workflow in vm.workflows"
+      ng-click="vm.select(workflow)">
       <div class="md-list-item-text">
         <h3>{{ workflow.name }}</h3>
         <p>Calls: {{ workflow.calls.length }}</p>
