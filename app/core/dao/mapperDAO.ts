@@ -22,6 +22,7 @@ module DAO {
         }, deferred.reject);
       return deferred.promise;
     }
+
     getById(id: string): ng.IPromise<Mapper> {
       var deferred = this.$q.defer();
       this.get('/api/mappers/' + id, null)
