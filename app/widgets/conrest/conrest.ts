@@ -17,6 +17,10 @@ module ConREST {
     templateUrl: 'callPage',
     routeUrl: '/workflows/:workflowId/calls/:callId',
     controller: 'ConRESTVM'
+  }, {
+    templateUrl: 'mapperPage',
+    routeUrl: '/workflows/:workflowId/connectors/:connectorId/mappers/:mapperId',
+    controller: 'ConRESTVM'
   }];
 
   angular.module('con-rest.con-rest', [
