@@ -25,6 +25,7 @@
     <md-list>
       <connector-item ng-repeat="connector in vm.workflow.connectors"
         workflow-id="{{ vm.workflow._id}}"
+        ng-click="vm.goToConnector(connector._id)"        
         connector-id="{{ connector._id}}"></connector-item>
     </md-list>
   </section>
