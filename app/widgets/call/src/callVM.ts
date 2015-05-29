@@ -1,13 +1,12 @@
 module CallVMS {
   import CallDAO = DAO.CallDAO;
   import Call = Models.Call;
+  import aceConfig = Modules.aceConfig;
+  import IAceConfig = Modules.IAceConfig;
 
   export class CallVM {
     static $inject = ['$scope', 'callDAO'];
-    aceConfig: Object = {
-      theme: 'con-rest',
-      mode: 'json'
-    };
+    aceConfig: IAceConfig = aceConfig;
     call: Call;
     callDAO: CallDAO;
     headers: string;
@@ -39,6 +38,8 @@ module CallVMS {
             this.headers = this.convertToString(call.headers);
             this.data = this.convertToString(call.data);
         });
+      } else {
+        this.call = new Call();
       }
     }
 
@@ -56,28 +57,11 @@ module CallVMS {
         return null;
       }
     }
-    registerCall(): void {
-      this.callDAO.create(this.call)
-        .then((id) => {
-          this.call._id = id;
-        });
-    }
-
-    updateCall(): void {
-      this.callDAO.update(this.call._id, this.call)
-        .then((response) => {
-
-        });
-    }
 
     save(): void {
       this.call.headers = this.convertToJSON(this.headers);
       this.call.data = this.convertToJSON(this.data);
-      if(!this.call._id) {
-        this.registerCall();
-      } else {
-        this.updateCall();
-      }
+      this.callDAO.save(this.call);
     }
   }
 }

@@ -24,6 +24,7 @@
 /// <reference path="core/dao/mapperDAO.ts" />
 /// <reference path="core/dao/workflowDAO.ts" />
 /// <reference path="core/dao/workflowExecutionDAO.ts" />
+/// <reference path="core/modules/aceConfig.ts" />
 /// <reference path="core/modules/appConfig.ts" />
 /// <reference path="widgets/call/src/call.ts" />
 /// <reference path="widgets/call/src/callForm.ts" />
