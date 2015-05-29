@@ -20,13 +20,13 @@ module Models {
 
   export interface IExecution {
     _id: string;
-    workflow: string;
-    apiCall: string;
-    statusCode: number;
-    url: string;
-    response: Object;
-    headers: Object;
-    data: Object;
-    executedAt: number;
+    workflow?: string;
+    apiCall?: string;
+    statusCode?: number;
+    url?: string;
+    response?: Object;
+    headers?: Object;
+    data?: Object;
+    executedAt?: number;
   }
 }

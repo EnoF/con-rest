@@ -60,6 +60,7 @@
 /// <reference path="widgets/execution/test/definitions/viewExecution.step.ts" />
 /// <reference path="widgets/mapper/mapper.ts" />
 /// <reference path="widgets/mapper/test/definitions/viewMapper.step.ts" />
+/// <reference path="widgets/workflow/test/definitions/execute.step.ts" />
 /// <reference path="widgets/workflow/test/definitions/registerWorkflow.step.ts" />
 /// <reference path="widgets/workflow/test/definitions/searchCall.step.ts" />
 /// <reference path="widgets/workflow/test/definitions/updateWorkflow.step.ts" />

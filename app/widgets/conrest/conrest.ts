@@ -29,6 +29,10 @@ module ConREST {
     templateUrl: 'workflowFormPage',
     routeUrl: '/workflows/:workflowId/edit',
     controller: 'ConRESTVM'
+  }, {
+    templateUrl: 'workflowExecutionPage',
+    routeUrl: '/workflows/:workflowId/executions/:executionId',
+    controller: 'ConRESTVM'
   }];
 
   angular.module('con-rest.con-rest', [
