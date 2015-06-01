@@ -48,6 +48,7 @@
 /// <reference path="widgets/workflowOverview/src/workflowOverview.ts" />
 /// <reference path="widgets/workflowOverview/src/workflowOverviewVM.ts" />
 /// <reference path="widgets/call/call.ts" />
+/// <reference path="widgets/call/test/definitions/registerCall.ts" />
 /// <reference path="widgets/call/test/definitions/viewCall.step.ts" />
 /// <reference path="widgets/callOverview/callOverview.ts" />
 /// <reference path="widgets/callOverview/test/definitions/viewCalls.step.ts" />

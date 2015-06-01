@@ -3,14 +3,16 @@ module CallVMS {
   import Call = Models.Call;
   import aceConfig = Modules.aceConfig;
   import IAceConfig = Modules.IAceConfig;
+  import ILocationService = ng.ILocationService;
 
   export class CallVM {
-    static $inject = ['$scope', 'callDAO'];
+    static $inject = ['$scope', 'callDAO', '$location'];
+    $location: ILocationService;
     aceConfig: IAceConfig = aceConfig;
     call: Call;
     callDAO: CallDAO;
-    headers: string;
     data: string;
+    headers: string;
     methods: Array<string> = [
       'GET',
       'POST',
@@ -24,7 +26,8 @@ module CallVMS {
       'formData'
     ];
 
-    constructor($scope, callDAO: CallDAO) {
+    constructor($scope, callDAO: CallDAO, $location: ILocationService) {
+      this.$location = $location;
       this.callDAO = callDAO;
       $scope.vm = this;
       if (!!$scope.call) {
@@ -61,7 +64,10 @@ module CallVMS {
     save(): void {
       this.call.headers = this.convertToJSON(this.headers);
       this.call.data = this.convertToJSON(this.data);
-      this.callDAO.save(this.call);
+      this.callDAO.save(this.call)
+        .then(() => {
+          this.$location.path('/calls/' + this.call._id);
+      });
     }
   }
 }
