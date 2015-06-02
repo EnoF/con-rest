@@ -8,13 +8,11 @@ module Models {
     response: Object;
     headers: Object;
     data: Object;
-    executedAt: Date;
 
     constructor(json: IExecution) {
       super(json);
       this.workflow = this.convertIdToClass(json.workflow, Workflow);
       this.apiCall = this.convertIdToClass(json.apiCall, Call);
-      this.executedAt = new Date(json.executedAt);
     }
   }
 
@@ -27,6 +25,5 @@ module Models {
     response?: Object;
     headers?: Object;
     data?: Object;
-    executedAt?: number;
   }
 }
