@@ -66,6 +66,19 @@ module.exports = function(grunt) {
         }]
       }
     },
+    compress: {
+      main: {
+        options: {
+          archive: 'conrest.tar'
+        },
+        files: [{
+          expand: true,
+          cwd: 'dist',
+          src: ['**/*'],
+          dest: '/'
+        }]
+      }
+    },
     concat: {
       dist: {
         files: {
@@ -510,7 +523,8 @@ module.exports = function(grunt) {
     'ngAnnotate',
     'uglify',
     'copy',
-    'concat'
+    'concat',
+    'compress'
   ]);
 
   var seleniumChildProcesses = {};
