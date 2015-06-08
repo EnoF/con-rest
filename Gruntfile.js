@@ -143,6 +143,9 @@ module.exports = function(grunt) {
             '**/*.js'
           ],
           dest: 'dist/server'
+        }, {
+          src: 'config.json',
+          dest: 'dist/config.json'
         }]
       }
     },
@@ -286,6 +289,12 @@ module.exports = function(grunt) {
             return url.replace(/(([\s\S]*?)\/widgets\/([\s\S]*?)\/src\/)|.html/g, '').replace(/.html/, '');
           }
         }
+      }
+    },
+    packageModules: {
+      dist: {
+        src: 'package.json',
+        dest: 'dist'
       }
     },
     'protractor_webdriver': {
@@ -524,6 +533,7 @@ module.exports = function(grunt) {
     'uglify',
     'copy',
     'concat',
+    'packageModules',
     'compress'
   ]);
 
