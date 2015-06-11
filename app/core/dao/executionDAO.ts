@@ -20,4 +20,5 @@ module DAO {
   export function executionDAO($injector: IInjectorService) {
     return new ExecutionDAO($injector);
   }
+  executionDAO.$inject = ['$injector'];
 }
