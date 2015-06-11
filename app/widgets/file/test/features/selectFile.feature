@@ -10,6 +10,7 @@ Feature: Select File
   Scenario: Select File
     Given files have been uploaded before
       And the "file selector" widget is initialized
+      And the files are requested
       And the service has responded
     When file on position 2 is selected
     Then the parent file id has been updated

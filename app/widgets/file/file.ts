@@ -3,6 +3,7 @@ module ConREST {
   angular.module('con-rest.file', [
     'con-rest.templates',
     'con-rest.dao',
+    'con-rest.events',
     'ngMaterial'
   ])
     .config(appConfig)

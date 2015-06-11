@@ -19,6 +19,19 @@ module DAO {
         }, deferred.reject);
       return deferred.promise;
     }
+
+    save(file: File) {
+      var deferred = this.$q.defer();
+      this.post('/api/files', {
+        name: file.name
+      }, 'file', file.file)
+        .then((response: any) => {
+          file._id = response.data;
+          deferred.resolve(file);
+        },
+          deferred.reject);
+      return deferred.promise;
+    }
   }
 
   export function fileDAO($injector: IInjectorService) {

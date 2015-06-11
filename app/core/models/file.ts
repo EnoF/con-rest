@@ -3,9 +3,12 @@ module Models {
     _id: string;
     name: string;
     mime: string;
+    file: any;
 
-    constructor(json: IFile) {
-      super(json);
+    constructor(json?: IFile) {
+      if (!!json) {
+        super(json);
+      }
     }
   }
 

@@ -20,6 +20,7 @@ module Test {
           mime: 'image/png'
         }]);
     })
+    .when('the files are requested', () => ctx.$scope.vm.loadFiles())
     .when('file on position $NUM is selected', (pos: string) => {
       ctx.$scope.vm.selectFile(ctx.$scope.vm.files[parseInt(pos, 10) - 1]);
       ctx.$scope.$apply();
