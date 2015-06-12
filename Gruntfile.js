@@ -85,6 +85,7 @@ module.exports = function(grunt) {
           '<%= app.dist %>/js/con-rest.min.js': [
             '.tmp/js/angular.min.js',
             'app/bower_components/ace-builds/src-min-noconflict/ace.js',
+            'app/bower_components/ace-builds/src-min-noconflict/mode-json.js',
             'app/bower_components/angular-ui-ace/ui-ace.min.js',
             '.tmp/js/build.min.js',
             '.tmp/js/templates.min.js'
@@ -400,7 +401,7 @@ module.exports = function(grunt) {
           wrap: 'exports'
         },
         files: [{
-          src: ['.tmp/js/build.js', 'app/styles/themes/theme-con-rest.js'],
+          src: ['app/styles/themes/theme-con-rest.js', '.tmp/js/build.js'],
           dest: '.tmp/js/build.min.js'
         }]
       },
