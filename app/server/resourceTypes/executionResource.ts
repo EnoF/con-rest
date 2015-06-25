@@ -30,11 +30,11 @@ class ExecutionResource extends Resource {
       type: request.type,
       data: request.data
     };
-    this.setRequestData(options);
+    this.setRequestData(request, options);
     return options;
   }
 
-  private setRequestData(options: IRequestOptions) {
+  private setRequestData(req, options: IRequestOptions) {
     if (!!options.data && options.type === PAYLOAD) {
       // *PAYLOAD* will go into the `body` of the request
       try {
@@ -50,6 +50,20 @@ class ExecutionResource extends Resource {
       // *FORM_DATA* will go into the `formData` of the request
       options.formData = options.data;
     }
+  }
+
+  private setFormData(req, options: IRequestOptions) {
+    var formData: any = options.data;
+    req.forEach((requestFile) => {
+      formData[requestFile.boundaryName] = {
+        value: requestFile.file.buffer,
+        options: {
+          filename: requestFile.file.name,
+          contentType: requestFile.file.mime
+        }
+      };
+    });
+    options.formData = formData;
   }
 
   private createExecutionData(request, options, response, body): IExecution {
