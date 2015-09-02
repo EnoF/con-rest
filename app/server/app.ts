@@ -4,6 +4,10 @@ import config = require('./config');
 var restIO = require('rest-io');
 var multer = require('multer');
 var app = express();
+
+app.use(express.static(__dirname + '/../'));
+app.use(express.static(__dirname + '/../../app/bower_components/'));
+
 restIO(app, {
   resources: __dirname + '/resources'
 });
