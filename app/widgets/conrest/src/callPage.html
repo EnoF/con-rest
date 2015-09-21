@@ -5,7 +5,9 @@
 <section hide-sm
   layout="row">
   <md-card flex-gt-sm="35">
-    <workflow id="{{ vm.$routeParams.workflowId }}"></workflow>
+    <workflow ng-if="!!vm.$routeParams.workflowId"
+              id="{{ vm.$routeParams.workflowId }}"></workflow>
+    <call-overview ng-if="!vm.$routeParams.workflowId"></call-overview>
   </md-card>
   <md-card flex-gt-sm="60">
     <call workflow-id="{{ vm.$routeParams.workflowId }}"

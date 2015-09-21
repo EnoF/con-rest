@@ -3,12 +3,20 @@
     <h2>
       Calls
     </h2>
+    <span flex></span>
+    <a class="md-icon-button md-button"
+       aria-label="add call"
+       href="#/register/call">
+      <md-icon md-font-icon="Material-Design-Icons"
+               class="mdi-content-add-circle"></md-icon>
+    </a>
   </div>
 </md-toolbar>
 <md-content>
   <md-list>
     <md-list-item class="md-3-line"
-      ng-repeat="call in vm.calls">
+      ng-repeat="call in vm.calls"
+      ng-click="vm.select(call)">
       <div class="md-list-item-text">
         <h3>{{ call.name }}</h3>
         <h4>{{ call.method }}</h4>

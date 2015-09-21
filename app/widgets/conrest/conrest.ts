@@ -23,6 +23,10 @@ module ConREST {
       routeUrl: '/calls',
       controller: 'ConRESTVM'
     }, {
+      templateUrl: 'callPage',
+      routeUrl: '/calls/:callId',
+      controller: 'ConRESTVM'
+    }, {
       templateUrl: 'callFormPage',
       routeUrl: '/register/call',
       controller: 'ConRESTVM'
